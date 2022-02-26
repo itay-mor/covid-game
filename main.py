@@ -1,5 +1,6 @@
 import pygame
 
+from level import Level
 from player import Player
 from settings import *
 from tile import Tile
@@ -7,24 +8,20 @@ from tile import Tile
 pygame.init()
 
 
-test_tile = pygame.sprite.Group(Tile((100, 100), 200))
-player1_gravity = 0
-player2_gravity = 0
 enemy_gravity = 0
 
 display = pygame.display.set_mode((WIDTH * SCALE_FACTOR, HEIGHT * SCALE_FACTOR))
 screen = pygame.Surface((WIDTH, HEIGHT))
-SPRITE_SHEET = SpriteSheet(r'assets/Standard sprites upd.png')
+
 screen.fill((255, 123, 67))
 background = screen.copy()
 clock = pygame.time.Clock()
+level = Level(level_map, screen)
 
 sprites = pygame.sprite.Group()
-player1 = Player(SPRITE_SHEET, sprites)
-player2 = SPRITE_SHEET.image_at((16, 16, 16, 16))
-player2_rect = player2.get_rect(center=(250, 50))
-enemy = SPRITE_SHEET.image_at((16 * 7, 16, 16, 16))
-enemy_rect = enemy.get_rect(center=(150, 50))
+# player1 = Player(SPRITE_SHEET, sprites)
+# player2 = Player(SPRITE_SHEET, sprites)
+
 
 while True:
     for event in pygame.event.get():
@@ -41,11 +38,8 @@ while True:
     #     player1_rect.bottom = HEIGHT
 
     screen.blit(background, (0, 0))
-    player1.update()
+    level.run()
     sprites.draw(screen)
-    test_tile.draw(screen)
-    screen.blit(player2, player2_rect)
-    screen.blit(enemy, enemy_rect)
 
     scaled_screen = pygame.transform.scale(screen, display.get_size())
     display.blit(scaled_screen, (0, 0))
