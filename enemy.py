@@ -14,14 +14,16 @@ class Enemy(Player):
         self.used_keys['left'] = 0
         self.used_keys['right'] = 0
         self.joysticks = [pygame.joystick.Joystick(i) for i in  range(pygame.joystick.get_count())]
+        self.jump_speed = -1
+        self.speed = 1
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         super(Enemy, self).update()
         for joystick in self.joysticks:
-            if joystick.get_button(0) or joystick.get_axis(1) < -0.1:
+            if joystick.get_button(0):
                 self.direction.y = self.jump_speed
-            axis0 = joystick.get_axis(0)
+            axis0 = joystick.get_axis(0) + 0.1
             # if axis0 < -0.1 or axis0 > 0.1:
-            self.direction.x = axis0 + 0.1
+            self.direction.x = axis0 * 0.5
             # print(f'axis: {axis0}')
             # print(f'direction: {self.direction.x}')

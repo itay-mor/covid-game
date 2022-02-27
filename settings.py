@@ -1,19 +1,19 @@
 from spritesheet import SpriteSheet
 
 level_map = [
-    '                             ',
-    '                      XX     ',
-    '                             ',
-    '               XXXXXXXXXX    ',
-    '                             ',
-    '     XXXXXX             XX ',
-    '                             ',
-    '           XXXXX             ',
-    '       XX                    ',
-    '                       XXXX  ',
-    ' XXXX                        ',
-    '                             ',
-    'XXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    '                           ',
+    '                       X X  ',
+    '  X                         ',
+    '  XX   X   XXXXX XXXXX      ',
+    '                            ',
+    '                      XX    ',
+    '                            ',
+    '           XXXXX     XX     ',
+    '       XX                   ',
+    '                      XXXX  ',
+    ' XXXX                       ',
+    '                            ',
+    'XXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 ]
 
 SCALE_FACTOR = 4

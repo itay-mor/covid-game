@@ -13,6 +13,7 @@ class Level:
     tiles: Group
 
     def __init__(self, level_data, surface):
+        self.speed = 2
         self.display_surface = surface
         self.sprite_sheet = SpriteSheet(r'assets/Standard sprites upd.png')
         self.setup_level(level_data)
@@ -38,7 +39,7 @@ class Level:
 
     def horizontal_movement_collision(self, player: Player):
         # player = self.player1
-        player.rect.x += player.direction.x
+        player.rect.x += player.direction.x * self.speed
 
         for tile in self.tiles.sprites():
             if tile.rect.colliderect(player.rect):
@@ -54,9 +55,25 @@ class Level:
             if tile.rect.colliderect(player.rect):
                 if player.direction.y > 0:
                     player.rect.bottom = tile.rect.top
+
+                    # Change the state of the player
+                    player.on_ground = True
+
                 elif player.direction.y < 0:
                     player.rect.top = tile.rect.bottom
+
+                    # Change the state of the player
+                    player.on_ceiling = True
+
                 player.direction.y = 0
+
+
+            if player.on_ground and player.direction.y < 0 or player.direction.y > 1:
+                player.on_ground = False
+
+            if player.on_ceiling and player.direction.y > 0:
+                player.on_ceiling = False
+
 
     def move_players(self):
         for player in self.player_list:
@@ -71,6 +88,13 @@ class Level:
             # self.vertical_movement_collision()
             # self.horizontal_movement_collision()
             self.move_players()
+            for player in self.player_list[0:1]:
+                if self.enemy.rect.colliderect(player.rect):
+                    player.sick = True
+                    # player.speed = 0
+                    # player.jump_speed = 0
+
+
             self.tiles.draw(self.display_surface)
             self.players.draw(self.display_surface)
             self.enemies.draw(self.display_surface)
