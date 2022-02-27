@@ -16,11 +16,12 @@ screen = pygame.Surface((WIDTH, HEIGHT))
 screen.fill((255, 123, 67))
 background = screen.copy()
 clock = pygame.time.Clock()
-level = Level(level_map, screen)
+
+pygame.joystick.init()
+
+l = Level(level_map, screen)
 
 sprites = pygame.sprite.Group()
-# player1 = Player(SPRITE_SHEET, sprites)
-# player2 = Player(SPRITE_SHEET, sprites)
 
 
 while True:
@@ -28,17 +29,19 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        # if event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_UP and player1_rect.bottom >= HEIGHT:
-        #         player1_gravity = -6
-    # Player
-    # player1_gravity += 0.5
-    # player1_rect.y += player1_gravity
-    # if player1_rect.bottom >= HEIGHT:
-    #     player1_rect.bottom = HEIGHT
+        # if event.type == pygame.JOYBUTTONDOWN:
+        #     if event.button == 0:
+        #         # Enemy jump
+        #         l.enemy.direction.y = l.enemy.jump_speed
+        #         pass
+        #
+        # if event.type == pygame.JOYAXISMOTION:
+        #     if event.axis in [0, 2]:
+        #         l.enemy.direction.x += event.value
+
 
     screen.blit(background, (0, 0))
-    level.run()
+    l.run()
     sprites.draw(screen)
 
     scaled_screen = pygame.transform.scale(screen, display.get_size())

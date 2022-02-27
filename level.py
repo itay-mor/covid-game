@@ -1,6 +1,7 @@
 import pygame.sprite
 from pygame.sprite import Group
 
+from enemy import Enemy
 from player import Player
 from settings import TILE_SIZE
 from spritesheet import SpriteSheet
@@ -15,14 +16,17 @@ class Level:
         self.display_surface = surface
         self.sprite_sheet = SpriteSheet(r'assets/Standard sprites upd.png')
         self.setup_level(level_data)
+        pygame.joystick.init()
+        self.enemy_x_motion = False
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
-        enemy = self.sprite_sheet.image_at((16 * 7, 16, 16, 16))
-        enemy_rect = enemy.get_rect(center=(150, 50))
-        self.player1 = Player(self.sprite_sheet, self.players)
-        self.player2 = Player(self.sprite_sheet, self.players)
+        self.enemies = pygame.sprite.GroupSingle()
+        self.enemy = Enemy(self.sprite_sheet, self.enemies)
+        self.player1 = Player(self.sprite_sheet, pygame.K_UP, self.players)
+        self.player2 = Player(self.sprite_sheet, pygame.K_w, self.players)
+        self.player_list = [self.player1, self.player2, self.enemy]
 
         for row_index, row in enumerate(layout):
             for col_index, cell in enumerate(row):
@@ -30,10 +34,10 @@ class Level:
                     x = col_index * TILE_SIZE
                     y = row_index * TILE_SIZE
 
-                    tile = Tile((x, y), TILE_SIZE, self.tiles)
+                    Tile((x, y), TILE_SIZE, self.tiles)
 
-    def horizontal_movement_collision(self):
-        player = self.player1
+    def horizontal_movement_collision(self, player: Player):
+        # player = self.player1
         player.rect.x += player.direction.x
 
         for tile in self.tiles.sprites():
@@ -43,20 +47,30 @@ class Level:
                 elif player.direction.x > 0:
                     player.rect.right = tile.rect.left
 
-    def vertical_movement_collision(self):
-        player = self.player1
+    def vertical_movement_collision(self, player):
+        # player = self.player1
         player.apply_gravity()
         for tile in self.tiles.sprites():
             if tile.rect.colliderect(player.rect):
                 if player.direction.y > 0:
                     player.rect.bottom = tile.rect.top
-                    player.direction.y = 0
                 elif player.direction.y < 0:
                     player.rect.top = tile.rect.bottom
+                player.direction.y = 0
+
+    def move_players(self):
+        for player in self.player_list:
+            self.horizontal_movement_collision(player)
+            self.vertical_movement_collision(player)
 
     def run(self):
-        self.players.update()
-        self.vertical_movement_collision()
-        self.horizontal_movement_collision()
-        self.tiles.draw(self.display_surface)
-        self.players.draw(self.display_surface)
+            self.players.update()
+            self.enemies.update()
+            joysticks = [pygame.joystick.Joystick(i) for i in  range(pygame.joystick.get_count())]
+
+            # self.vertical_movement_collision()
+            # self.horizontal_movement_collision()
+            self.move_players()
+            self.tiles.draw(self.display_surface)
+            self.players.draw(self.display_surface)
+            self.enemies.draw(self.display_surface)
