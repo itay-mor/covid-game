@@ -2,7 +2,7 @@ import pygame.sprite
 from pygame.sprite import Group
 
 from enemy import Enemy
-from player import Player
+from player import Player, ControlDevice
 from settings import TILE_SIZE
 from spritesheet import SpriteSheet
 from tile import Tile
@@ -24,9 +24,9 @@ class Level:
         self.tiles = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.enemies = pygame.sprite.GroupSingle()
-        self.enemy = Enemy(self.sprite_sheet, self.enemies)
-        self.player1 = Player(self.sprite_sheet, pygame.K_UP, self.players)
-        self.player2 = Player(self.sprite_sheet, pygame.K_w, self.players)
+        self.enemy = Enemy(self.sprite_sheet, pygame.K_UP, ControlDevice.JOYSTICK, self.enemies)
+        self.player1 = Player(self.sprite_sheet, pygame.K_UP, ControlDevice.KEYBOARD, self.players)
+        self.player2 = Player(self.sprite_sheet, pygame.K_w, ControlDevice.KEYBOARD, self.players)
         self.player_list = [self.player1, self.player2, self.enemy]
 
         for row_index, row in enumerate(layout):

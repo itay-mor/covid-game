@@ -2,28 +2,38 @@ from typing import Any
 
 import pygame
 
-from player import Player
+from player import Player, ControlDevice
 from spritesheet import SpriteSheet
 
 
 class Enemy(Player):
-    def __init__(self, sprite_sheet: SpriteSheet, *groups):
-        super().__init__(sprite_sheet, 0, *groups)
+    def __init__(self, sprite_sheet: SpriteSheet, jump_key, control_device, *groups):
+        super().__init__(sprite_sheet, jump_key, control_device, *groups)
         self.image = self.sprite_sheet.image_at((16*7, 16, 16, 16))
-        self.used_keys['jump'] = 0
-        self.used_keys['left'] = 0
-        self.used_keys['right'] = 0
-        self.joysticks = [pygame.joystick.Joystick(i) for i in  range(pygame.joystick.get_count())]
         self.jump_speed = -1
         self.speed = 1
 
     def update(self, *args: Any, **kwargs: Any) -> None:
         super(Enemy, self).update()
-        for joystick in self.joysticks:
-            if joystick.get_button(0):
+        self.get_input()
+
+    def get_input(self):
+        if self.control_device == ControlDevice.KEYBOARD:
+            keys = pygame.key.get_pressed()
+            self.direction.x = 0
+            if keys[self.used_keys['jump']]:
                 self.direction.y = self.jump_speed
-            axis0 = joystick.get_axis(0) + 0.1
-            # if axis0 < -0.1 or axis0 > 0.1:
-            self.direction.x = axis0 * 0.5
-            # print(f'axis: {axis0}')
-            # print(f'direction: {self.direction.x}')
+
+            if keys[self.used_keys['right']]:
+                self.direction.x += 1
+
+            if keys[self.used_keys['left']]:
+                self.direction.x -= 1
+
+        else:
+            for joystick in self.joysticks:
+                if joystick.get_button(0):
+                    self.direction.y = self.jump_speed
+
+                axis0 = joystick.get_axis(0) + 0.1
+                self.direction.x = axis0 * 0.5
