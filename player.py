@@ -9,6 +9,8 @@ from settings import *
 class Player(pygame.sprite.Sprite):
     def __init__(self, sprite_sheet: SpriteSheet, jump_key: int, *groups):
         super().__init__(*groups)
+        self.jump_music = pygame.mixer.Sound(r'assets/jump.mp3')
+        self.jump_music.set_volume(0.35)
 
         # Set the appearance of the player.
         self.sprite_sheet = sprite_sheet
@@ -62,3 +64,4 @@ class Player(pygame.sprite.Sprite):
 
     def jump(self):
         self.direction.y = self.jump_speed
+        self.jump_music.play()

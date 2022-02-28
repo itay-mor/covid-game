@@ -35,7 +35,7 @@ class Level:
                     x = col_index * TILE_SIZE
                     y = row_index * TILE_SIZE
 
-                    Tile((x, y), TILE_SIZE, self.tiles)
+                    Tile((x, y+(TILE_SIZE-2)), TILE_SIZE, self.tiles)
 
     def horizontal_movement_collision(self, player: Player):
         # player = self.player1

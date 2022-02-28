@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 from level import Level
@@ -16,6 +18,9 @@ screen = pygame.Surface((WIDTH, HEIGHT))
 screen.fill((255, 123, 67))
 background = screen.copy()
 clock = pygame.time.Clock()
+bg_music = pygame.mixer.Sound(random.choice([r'assets/bg_music1.mp3', r'assets/bg_music2.mp3']))
+bg_music.set_volume(0.7)
+bg_music.play(loops=-1)
 
 pygame.joystick.init()
 
